@@ -177,22 +177,18 @@ class EventController(
         return "redirect:/clubs/$clubId"
     }
 
-    @PostMapping("/clubs/{clubId}/events/{eventId}", params = ["_method=PUT"])
-fun updateEventPostOverride(
-    @PathVariable clubId: Long,
-    @PathVariable eventId: Long,
-    @Valid @ModelAttribute("eventForm") eventForm: EventFormDto,
-    bindingResult: BindingResult,
-    model: Model
-): String {
-    return updateEvent(clubId, eventId, eventForm, bindingResult, model)
-}
+    @PostMapping("/clubs/{clubId}/events/{eventId}", params = ["_method=put"])
+    fun updateEventPostOverride(
+        @PathVariable clubId: Long,
+        @PathVariable eventId: Long,
+        @Valid @ModelAttribute("eventForm") eventForm: EventFormDto,
+        bindingResult: BindingResult,
+        model: Model
+    ): String = updateEvent(clubId, eventId, eventForm, bindingResult, model)
 
-@PostMapping("/clubs/{clubId}/events/{eventId}", params = ["_method=DELETE"])
-fun deleteEventPostOverride(
-    @PathVariable clubId: Long,
-    @PathVariable eventId: Long
-): String {
-    return deleteEvent(clubId, eventId)
-}
+    @PostMapping("/clubs/{clubId}/events/{eventId}", params = ["_method=delete"])
+    fun deleteEventPostOverride(
+        @PathVariable clubId: Long,
+        @PathVariable eventId: Long
+    ): String = deleteEvent(clubId, eventId)
 }
