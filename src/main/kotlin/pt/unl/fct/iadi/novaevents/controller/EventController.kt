@@ -72,12 +72,10 @@ class EventController(
             } catch (ex: IllegalArgumentException) {
                 bindingResult.rejectValue("name", "duplicate", ex.message!!)
                 model.addAttribute("club", club)
-                model.addAttribute("event", event)
                 model.addAttribute("eventTypes", EventType.values())
-                model.addAttribute("formAction", "/clubs/$clubId/events/$eventId")
-                model.addAttribute("formTitle", "Edit Event")
-                model.addAttribute("submitLabel", "Update")
-                model.addAttribute("httpMethod", "put")
+                model.addAttribute("formAction", "/clubs/$clubId/events")
+                model.addAttribute("formTitle", "Create New Event")
+                model.addAttribute("submitLabel", "Create")
                 return "events/form"
             }
         }
