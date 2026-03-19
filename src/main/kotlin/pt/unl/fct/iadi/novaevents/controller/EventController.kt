@@ -71,6 +71,14 @@ class EventController(
                 eventService.validateDuplicateName(eventForm.name, null)
             } catch (ex: IllegalArgumentException) {
                 bindingResult.rejectValue("name", "duplicate", ex.message!!)
+                model.addAttribute("club", club)
+                model.addAttribute("event", event)
+                model.addAttribute("eventTypes", EventType.values())
+                model.addAttribute("formAction", "/clubs/$clubId/events/$eventId")
+                model.addAttribute("formTitle", "Edit Event")
+                model.addAttribute("submitLabel", "Update")
+                model.addAttribute("httpMethod", "put")
+                return "events/form"
             }
         }
 
@@ -122,6 +130,14 @@ class EventController(
                 eventService.validateDuplicateName(eventForm.name, eventId)
             } catch (ex: IllegalArgumentException) {
                 bindingResult.rejectValue("name", "duplicate", ex.message!!)
+                model.addAttribute("club", club)
+                model.addAttribute("event", event)
+                model.addAttribute("eventTypes", EventType.values())
+                model.addAttribute("formAction", "/clubs/$clubId/events/$eventId")
+                model.addAttribute("formTitle", "Edit Event")
+                model.addAttribute("submitLabel", "Update")
+                model.addAttribute("httpMethod", "put")
+                return "events/form"
             }
         }
 
