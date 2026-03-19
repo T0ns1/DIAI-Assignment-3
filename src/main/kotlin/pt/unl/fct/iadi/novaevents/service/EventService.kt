@@ -11,7 +11,7 @@ import java.util.NoSuchElementException
 class EventService(private val clubService: ClubService) {
    
     private val events = mutableListOf(
-        Event(1L, 1L, "Beginner Chess Workshop", LocalDate.now().plusDays(7), "Room A1", EventType.WORKSHOP, "Learn core openings and tactics."),
+        Event(1L, 1L, "Beginner's Chess Workshop", LocalDate.now().plusDays(7), "Room A1", EventType.WORKSHOP, "Learn core openings and tactics."),
         Event(2L, 2L, "Intro to Arduino", LocalDate.now().plusDays(10), "Lab 2", EventType.WORKSHOP, "Hands-on robotics session."),
         Event(3L, 3L, "Campus Photo Walk", LocalDate.now().plusDays(5), "Main Gate", EventType.SOCIAL, "Walk and shoot around campus."),
         Event(4L, 4L, "Sintra Trail Day", LocalDate.now().plusDays(14), "Sintra Station", EventType.SOCIAL, "A full-day hiking trip."),
