@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Events')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <h1 class="mb-4">Events</h1>
+
+    <form class="row g-3 mb-4" method="get" th:action="@{/events}">
+        <div class="col-md-3">
+            <label class="form-label">Type</label>
+            <select name="type" class="form-select">
+                <option value="">All</option>
+                <option th:each="t : ${eventTypes}"
+                        th:value="${t}"
+                        th:text="${t}"
+                        th:selected="${t == selectedType}">
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Club</label>
+            <select name="clubId" class="form-select">
+                <option value="">All</option>
+                <option th:each="club : ${clubs}"
+                        th:value="${club.id}"
+                        th:text="${club.name}"
+                        th:selected="${club.id == selectedClubId}">
+                </option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">From</label>
+            <input class="form-control" type="date" name="from" th:value="${from}">
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">To</label>
+            <input class="form-control" type="date" name="to" th:value="${to}">
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-primary w-100" type="submit">Filter</button>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Club</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="event : ${events}">
+            <td>
+                <a th:href="@{/clubs/{clubId}/events/{eventId}(clubId=${event.clubId}, eventId=${event.id})}"
+                   th:text="${event.name}">Event</a>
+            </td>
+            <td>
+                <a th:href="@{/clubs/{id}(id=${event.clubId})}" th:text="${clubMap[event.clubId].name}">Club</a>
+            </td>
+            <td th:text="${event.date}"></td>
+            <td th:text="${event.type}"></td>
+            <td th:text="${event.location} ?: '-'"></td>
+            <td>
+                <a class="btn btn-sm btn-outline-secondary me-1"
+                   th:href="@{/clubs/{clubId}/events/{eventId}/edit(clubId=${event.clubId}, eventId=${event.id})}">
+                    Edit
+                </a>
+                <a class="btn btn-sm btn-outline-danger"
+                   th:href="@{/clubs/{clubId}/events/{eventId}/delete(clubId=${event.clubId}, eventId=${event.id})}">
+                    Delete
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

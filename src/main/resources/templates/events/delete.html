@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Delete Event')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <h1>Delete Event</h1>
+    <p>Are you sure you want to delete <strong th:text="${event.name}">event</strong>?</p>
+
+    <form method="post" th:action="@{/clubs/{clubId}/events/{eventId}(clubId=${club.id}, eventId=${event.id})}">
+        <input type="hidden" name="_method" value="delete">
+        <button class="btn btn-danger" type="submit">Confirm delete</button>
+        <a class="btn btn-secondary" th:href="@{/clubs/{clubId}/events/{eventId}(clubId=${club.id}, eventId=${event.id})}">
+            Cancel
+        </a>
+    </form>
+</div>
+</body>
+</html>
