@@ -81,6 +81,6 @@ class EventService(private val clubService: ClubService) {
 
     private fun validateDuplicateName(name: String) {
         if (events.any { it.name.equals(name, ignoreCase = true) })
-            throw IllegalArgumentException("Event with name $name already exists")
+            throw IllegalArgumentException("An Event with this name already exists")
     }
 }
