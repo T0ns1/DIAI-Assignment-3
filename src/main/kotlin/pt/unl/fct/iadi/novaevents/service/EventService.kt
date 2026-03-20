@@ -59,7 +59,7 @@ class EventService(private val clubService: ClubService) {
     fun createEvent(clubId: Long, name: String, date: LocalDate,
                     location: String?, type: EventType, description: String?): Event {
         clubService.findById(clubId) // Ensure club exists, will throw NoSuchElementException if not
-        validateDuplicateName(name) // No name dupes
+        validateDuplicateName(name, null) // No name dupes
 
         val newEvent = Event(
             id = nextId++,
@@ -78,7 +78,7 @@ class EventService(private val clubService: ClubService) {
     fun update(clubId: Long, eventId: Long, name: String,
                date: LocalDate, location: String?, type: EventType, description: String?): Event {
         val event = findByIdInClub(clubId, eventId)
-        if (events.any { it.id!= clubId && it.name.equals(name, true) }) { throw IllegalArgumentException("An event with this name already exists") }
+        validateDuplicateName(name, eventId)
 
         event.name = name
         event.date = date
@@ -94,8 +94,13 @@ class EventService(private val clubService: ClubService) {
         events.remove(event)
     }
 
-    private fun validateDuplicateName(name: String) {
-        if (events.any { it.name.equals(name, ignoreCase = true) })
-            throw IllegalArgumentException("An event with this name already exists")
+    fun validateDuplicateName(name: String, currentEventId: Long?) {
+        val normalizedNewName = name.trim().lowercase()
+        val duplicate = events.any {
+            it.id != currentEventId && it.name.trim().lowercase() == normalizedNewName
+        }
+        if (duplicate) {
+            throw IllegalArgumentException("An event with this name already exists.")
+        }
     }
 }
