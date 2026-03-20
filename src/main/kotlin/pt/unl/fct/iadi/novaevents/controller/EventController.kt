@@ -1,7 +1,6 @@
 package pt.unl.fct.iadi.novaevents.controller
 
 import jakarta.validation.Valid
-import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -122,7 +121,7 @@ class EventController(
             return "events/update"
         }
         try {
-            val updatedEvent = eventService.update(
+            eventService.update(
                 clubId = clubId,
                 eventId = eventId,
                 name = eventForm.name,
@@ -167,7 +166,7 @@ class EventController(
         return deleteEvent(clubId, eventId)
     }
 
-    @PutMapping("/clubs/{clubId}/events/{id}")
+    @PutMapping("/clubs/{clubId}/events/{eventId}")
     fun updateEventPut(@PathVariable clubId: Long, @PathVariable eventId: Long,
                        @Valid @ModelAttribute("eventForm") eventForm: EventFormDto, bindingResult: BindingResult, model: Model): String {
         return updateEvent(clubId, eventId, eventForm, bindingResult, model)
