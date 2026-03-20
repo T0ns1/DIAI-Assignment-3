@@ -163,13 +163,13 @@ class EventController(
     }
 
     @DeleteMapping("/clubs/{clubId}/events/{id}")
-    fun deleteEventDelete(@PathVariable clubId: Long, @PathVariable id: Long): String {
-        return deleteEvent(clubId, id)
+    fun deleteEventDelete(@PathVariable clubId: Long, @PathVariable eventId: Long): String {
+        return deleteEvent(clubId, eventId)
     }
 
     @PutMapping("/clubs/{clubId}/events/{id}")
     fun updateEventPut(@PathVariable clubId: Long, @PathVariable id: Long,
-                       @Valid @ModelAttribute("form") form: EventFormDto, bindingResult: BindingResult, model: Model): String {
-        return updateEvent(clubId, id, form, bindingResult, model)
+                       @Valid @ModelAttribute("eventForm") eventForm: EventFormDto, bindingResult: BindingResult, model: Model): String {
+        return updateEvent(clubId, id, eventForm, bindingResult, model)
     }
 }
