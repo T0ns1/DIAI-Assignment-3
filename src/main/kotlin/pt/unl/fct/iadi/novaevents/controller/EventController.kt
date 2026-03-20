@@ -162,14 +162,14 @@ class EventController(
         return "redirect:/clubs/$clubId"
     }
 
-    @DeleteMapping("/clubs/{clubId}/events/{id}")
+    @DeleteMapping("/clubs/{clubId}/events/{eventId}")
     fun deleteEventDelete(@PathVariable clubId: Long, @PathVariable eventId: Long): String {
         return deleteEvent(clubId, eventId)
     }
 
     @PutMapping("/clubs/{clubId}/events/{id}")
-    fun updateEventPut(@PathVariable clubId: Long, @PathVariable id: Long,
+    fun updateEventPut(@PathVariable clubId: Long, @PathVariable eventId: Long,
                        @Valid @ModelAttribute("eventForm") eventForm: EventFormDto, bindingResult: BindingResult, model: Model): String {
-        return updateEvent(clubId, id, eventForm, bindingResult, model)
+        return updateEvent(clubId, eventId, eventForm, bindingResult, model)
     }
 }
