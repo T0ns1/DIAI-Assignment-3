@@ -15,10 +15,10 @@ data class EventFormDto(
     @field:DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     var date: LocalDate? = null,
 
-    var location: String = "",
+    var location: String? = null,
 
     @field:NotNull(message = "Event type is required")
     var type: EventType? = null,
 
-    var description: String = ""
+    var description: String? = null
 )

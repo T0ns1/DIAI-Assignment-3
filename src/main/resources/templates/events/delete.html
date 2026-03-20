@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Delete Event')}"></head>
+<nav th:replace="~{fragments/layout :: head('Delete Event')}"></nav>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <div class="container">
-    <h1>Delete Event</h1>
-    <p>Are you sure you want to delete <strong th:text="${event.name}">event</strong>?</p>
+    <h1 class="fw-bold">Delete Event</h1>
+    <p>Are you sure you want to delete the following event?</p>
+
+    <p><strong>Date</strong><br><span th:text="${#temporals.format(event.date, 'dd MMM yyyy')}"></span></p>
+    <p><strong>Type</strong><br><span th:text="${event.type}"></span></p>
+    <p><strong>Location</strong><br><span th:text="${event.location} ?: '-'"></span></p>
+    <p><strong>Description</strong><br><span th:text="${event.description} ?: '-'"></span></p>
+    <p><strong>Club</strong><br><a th:text="${club.name}"></a></p>
 
     <form method="post" th:action="@{/clubs/{clubId}/events/{eventId}(clubId=${club.id}, eventId=${event.id})}">
-        <input type="hidden" name="_method" value="delete">
-        <button class="btn btn-danger" type="submit">Confirm delete</button>
-        <a class="btn btn-secondary" th:href="@{/clubs/{clubId}/events/{eventId}(clubId=${club.id}, eventId=${event.id})}">
-            Cancel
-        </a>
+        <input type="hidden" name="_method" value="DELETE">
+        <button class="btn btn-danger" type="submit">Yes, Delete</button>
     </form>
 </div>
 </body>

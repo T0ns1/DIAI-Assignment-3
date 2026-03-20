@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('New Event')}"></head>
+<head th:replace="~{fragments/layout :: head('Update Event')}"></head>
 <body class="bg-light">
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <div class="container">
-    <h1 class="fw-bold">New Event for <span th:text="${club.name}"></span></h1>
+    <h1 class="fw-bold">Update Event <span th:text="${eventForm.name}"></span> for <span th:text="${club.name}"></span></h1>
 
-    <form th:action="@{/clubs/{clubId}/events(clubId=${club.id})}" th:object="${eventForm}" method="post" class="mt-4">
+    <form th:action="@{/clubs/{clubId}/events/{eventId}(clubId=${club.id}, eventId=${event.id})}"
+          th:object="${eventForm}" method="post" class="mt-4">
+
+        <input type="hidden" name="_method" value="PUT">
 
         <div class="mb-3">
             <label class="form-label">Name</label>

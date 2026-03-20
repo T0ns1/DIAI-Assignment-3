@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head(${event.name})}"></head>
+<nav th:replace="~{fragments/layout :: head('New Event')}"></nav>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <div class="container">
     <h1 th:text="${event.name}">Event</h1>
 
-    <p><strong>Club:</strong> <a th:href="@{/clubs/{id}(id=${club.id})}" th:text="${club.name}">Club</a></p>
-    <p><strong>Date:</strong> <span th:text="${event.date}"></span></p>
-    <p><strong>Location:</strong> <span th:text="${event.location} ?: '-'"></span></p>
-    <p><strong>Type:</strong> <span th:text="${event.type}"></span></p>
-    <p><strong>Description:</strong> <span th:text="${event.description} ?: '-'"></span></p>
+    <p><strong>Date</strong><br><span th:text="${#temporals.format(event.date, 'dd MMM yyyy')}"></span></p>
+    <p><strong>Type</strong><br><span th:text="${event.type}"></span></p>
+    <p><strong>Location</strong><br><span th:text="${event.location} ?: '-'"></span></p>
+    <p><strong>Description</strong><br><span th:text="${event.description} ?: '-'"></span></p>
+    <p><strong>Club</strong><br><a th:href="@{/clubs/{id}(id=${club.id})}" th:text="${club.name}"></a></p>
 
     <div class="mt-3">
-        <a class="btn btn-secondary"
+        <a class="btn btn-primary"
            th:href="@{/clubs/{clubId}/events/{eventId}/edit(clubId=${club.id}, eventId=${event.id})}">
             Edit
         </a>
