@@ -62,8 +62,7 @@ class EventService(private val clubService: ClubService) {
     fun update(clubId: Long, eventId: Long, name: String,
                date: LocalDate, location: String?, type: EventType, description: String?): Event {
         val event = findByIdInClub(clubId, eventId)
-        if (event.name != name)
-            validateDuplicateName(name)
+        if (events.any { it.id!= clubId && it.name.equals(name, true) }) { throw IllegalArgumentException("An event with this name already exists") }
 
         event.name = name
         event.date = date
