@@ -1,22 +1,26 @@
 package pt.unl.fct.iadi.novaevents.service
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.data.domain.Sort
 import pt.unl.fct.iadi.novaevents.model.Club
-import pt.unl.fct.iadi.novaevents.model.Club.ClubCategory
+import pt.unl.fct.iadi.novaevents.repository.ClubRepository
 import java.util.NoSuchElementException
 
 @Service
-class ClubService {
-    
-    private val clubs = listOf(
-        Club(1L, "Chess Club", "A club for chess lovers of all skill levels.", ClubCategory.ACADEMIC),
-        Club(2L, "Robotics Club", "The Robotics Club is the place to turn ideas into machines.", ClubCategory.TECHNOLOGY),
-        Club(3L, "Photography Club", "Explore composition, editing, and visual storytelling through photography.", ClubCategory.ARTS),
-        Club(4L, "Hiking & Outdoors Club", "Weekend hikes, outdoor adventures, and nature exploration.", ClubCategory.SPORTS),
-        Club(5L, "Film Society", "Screenings, discussion nights, and appreciation of cinema.", ClubCategory.CULTURAL)
-    )
+@Transactional(readOnly = true)
+class ClubService(
+    private val clubRepository: ClubRepository
+) {
+    fun findAll(): List<Club> = clubRepository.findAll(Sort.by("id"))
 
-    fun findAll(): List<Club> = clubs
+    fun findAllForList(): List<ClubListItem> {
+        val countsByClubId = clubRepository.findEventCounts().associate { it.getClubId() to it.getEventCount() }
+        return findAll().map { club ->
+            ClubListItem(club = club, eventCount = countsByClubId[club.id] ?: 0L)
+        }
+    }
 
-    fun findById(id: Long): Club = clubs.find { it.id == id } ?: throw NoSuchElementException("Club with id $id not found")
+    fun findById(id: Long): Club =
+        clubRepository.findById(id).orElseThrow { NoSuchElementException("Club with id $id not found") }
 }

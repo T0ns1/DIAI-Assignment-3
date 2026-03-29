@@ -8,7 +8,7 @@
     <h1 th:text="${event.name}">Event</h1>
 
     <p><strong>Date</strong><br><span th:text="${#temporals.format(event.date, 'dd MMM yyyy')}"></span></p>
-    <p><strong>Type</strong><br><span th:text="${event.type}"></span></p>
+    <p><strong>Type</strong><br><span th:text="${event.type.name}"></span></p>
     <p><strong>Location</strong><br><span th:text="${event.location} ?: '-'"></span></p>
     <p><strong>Description</strong><br><span th:text="${event.description} ?: '-'"></span></p>
     <p><strong>Club</strong><br><a th:href="@{/clubs/{id}(id=${club.id})}" th:text="${club.name}"></a></p>

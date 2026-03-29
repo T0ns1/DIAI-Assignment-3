@@ -18,26 +18,29 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="club : ${clubs}">
-            <td th:text="${club.name}"></td>
+        <tr th:each="clubItem : ${clubs}">
+            <td>
+                <span th:text="${clubItem.club.name}"></span>
+                <span class="badge text-bg-secondary ms-2" th:text="${clubItem.eventCount + ' events'}"></span>
+            </td>
             <td>
                 <span th:class="${'badge rounded-2 ' +
-                    (club.category.name() == 'TECHNOLOGY' ? 'bg-primary' :
-                    (club.category.name() == 'ARTS' ? 'bg-warning text-dark' :
-                    (club.category.name() == 'SPORTS' ? 'bg-success' :
-                    (club.category.name() == 'ACADEMIC' ? 'bg-info text-dark' :
-                    (club.category.name() == 'CULTURAL' ? 'bg-dark' : 'bg-secondary')))))}"
-                                  th:text="${club.category}">
+                    (clubItem.club.category.name() == 'TECHNOLOGY' ? 'bg-primary' :
+                    (clubItem.club.category.name() == 'ARTS' ? 'bg-warning text-dark' :
+                    (clubItem.club.category.name() == 'SPORTS' ? 'bg-success' :
+                    (clubItem.club.category.name() == 'ACADEMIC' ? 'bg-info text-dark' :
+                    (clubItem.club.category.name() == 'CULTURAL' ? 'bg-dark' : 'bg-secondary')))))}"
+                                  th:text="${clubItem.club.category}">
                 </span>
             </td>
             <td>
                 <details>
-                    <summary class="text-muted" th:text="${#strings.abbreviate(club.description, 50) + '...'}"></summary>
-                    <p class="mt-2" th:text="${club.description}"></p>
+                    <summary class="text-muted" th:text="${#strings.abbreviate(clubItem.club.description, 50) + '...'}"></summary>
+                    <p class="mt-2" th:text="${clubItem.club.description}"></p>
                 </details>
             </td>
             <td>
-                <a th:href="@{/clubs/{id}(id=${club.id})}"
+                <a th:href="@{/clubs/{id}(id=${clubItem.club.id})}"
                    class="btn btn-sm btn-outline-primary">View Details</a>
             </td>
         </tr>

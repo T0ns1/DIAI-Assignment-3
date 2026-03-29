@@ -16,8 +16,9 @@
                         <label class="form-label">Event Type</label>
                         <select name="type" class="form-select">
                             <option value="">All types</option>
-                            <option th:each="t : ${T(pt.unl.fct.iadi.novaevents.model.Event.EventType).values()}"
-                                    th:value="${t}" th:text="${t}"></option>
+                            <option th:each="t : ${eventTypes}"
+                                    th:selected="${selectedType == t.name}"
+                                    th:value="${t.name}" th:text="${t.name}"></option>
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -25,6 +26,7 @@
                         <select name="clubId" class="form-select">
                             <option value="">All clubs</option>
                             <option th:each="c : ${clubs}"
+                                    th:selected="${selectedClubId == c.id}"
                                     th:value="${c.id}" th:text="${c.name}"></option>
                         </select>
                     </div>
@@ -53,22 +55,22 @@
         <tbody>
         <tr th:each="event : ${events}">
             <td>
-                <a th:href="@{/clubs/{clubId}/events/{eventId}(clubId=${event.clubId}, eventId=${event.id})}"
+                <a th:href="@{/clubs/{clubId}/events/{eventId}(clubId=${event.club.id}, eventId=${event.id})}"
                    th:text="${event.name}">Event</a>
             </td>
             <td>
-                <a th:href="@{/clubs/{id}(id=${event.clubId})}" th:text="${clubMap[event.clubId].name}">Club</a>
+                <a th:href="@{/clubs/{id}(id=${event.club.id})}" th:text="${clubMap[event.club.id].name}">Club</a>
             </td>
             <td th:text="${#temporals.format(event.date, 'dd MMM yyyy')}"></td>
-            <td><span class="badge bg-secondary" th:text="${event.type}"></span></td>
+            <td><span class="badge bg-secondary" th:text="${event.type.name}"></span></td>
             <td th:text="${event.location} ?: '-'"></td>
             <td>
                 <a class="btn btn-sm btn-outline-primary me-1"
-                   th:href="@{/clubs/{clubId}/events/{eventId}/edit(clubId=${event.clubId}, eventId=${event.id})}">
+                   th:href="@{/clubs/{clubId}/events/{eventId}/edit(clubId=${event.club.id}, eventId=${event.id})}">
                     Edit
                 </a>
                 <a class="btn btn-sm btn-outline-danger"
-                   th:href="@{/clubs/{clubId}/events/{eventId}/delete(clubId=${event.clubId}, eventId=${event.id})}">
+                   th:href="@{/clubs/{clubId}/events/{eventId}/delete(clubId=${event.club.id}, eventId=${event.id})}">
                     Delete
                 </a>
             </td>

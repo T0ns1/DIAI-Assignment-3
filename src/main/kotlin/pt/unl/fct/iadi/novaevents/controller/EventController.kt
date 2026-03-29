@@ -6,7 +6,6 @@ import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import pt.unl.fct.iadi.novaevents.controller.dto.EventFormDto
-import pt.unl.fct.iadi.novaevents.model.Event.EventType
 import pt.unl.fct.iadi.novaevents.service.ClubService
 import pt.unl.fct.iadi.novaevents.service.EventService
 
@@ -18,13 +17,17 @@ class EventController(
 
     @GetMapping("/events")
     fun listEvents(
-        @RequestParam(required = false) type: EventType?,
+        @RequestParam(required = false) type: String?,
         @RequestParam(required = false) clubId: Long?,
         model: Model
     ): String {
         val clubs = clubService.findAll()
+        val eventTypes = eventService.findAllEventTypes()
         model.addAttribute("clubs", clubs)
-        model.addAttribute("clubMap", clubs.associate { it.id to it })
+        model.addAttribute("eventTypes", eventTypes)
+        model.addAttribute("clubMap", clubs.associateBy { it.id })
+        model.addAttribute("selectedType", type)
+        model.addAttribute("selectedClubId", clubId)
 
         model.addAttribute("events",
             eventService.getAllEvents(type, clubId))
@@ -48,6 +51,7 @@ class EventController(
     fun createForm(@PathVariable clubId: Long, model: Model): String {
         model.addAttribute("club", clubService.findById(clubId))
         model.addAttribute("eventForm", EventFormDto())
+        model.addAttribute("eventTypes", eventService.findAllEventTypes())
         return "events/form"
     }
 
@@ -70,7 +74,7 @@ class EventController(
                 name = eventForm.name,
                 date = eventForm.date!!,
                 location = eventForm.location,
-                type = eventForm.type!!,
+                typeId = eventForm.type!!,
                 description = eventForm.description
             )
             return "redirect:/clubs/$clubId/events/${event.id}" // Avoid double post
@@ -78,6 +82,7 @@ class EventController(
             bindingResult.rejectValue("name", "duplicate",
                 ex.message ?: "An event with this name already exists")
             model.addAttribute("club", club)
+            model.addAttribute("eventTypes", eventService.findAllEventTypes())
             return "events/form"
         }
     }
@@ -94,13 +99,14 @@ class EventController(
             name = event.name,
             date = event.date,
             location = event.location,
-            type = event.type,
+            type = event.type?.id,
             description = event.description
         )
 
         model.addAttribute("club", clubService.findById(clubId))
         model.addAttribute("event", event)
         model.addAttribute("eventForm", eventForm)
+        model.addAttribute("eventTypes", eventService.findAllEventTypes())
         return "events/update"
     }
 
@@ -118,6 +124,7 @@ class EventController(
             model.addAttribute("club", club)
             model.addAttribute("event", event)
             model.addAttribute("eventForm", eventForm)
+            model.addAttribute("eventTypes", eventService.findAllEventTypes())
             return "events/update"
         }
         try {
@@ -127,7 +134,7 @@ class EventController(
                 name = eventForm.name,
                 date = eventForm.date!!,
                 location = eventForm.location,
-                type = eventForm.type!!,
+                typeId = eventForm.type!!,
                 description = eventForm.description
             )
             return "redirect:/clubs/$clubId/events/$eventId" // To avoid duplicate form submission on refresh
@@ -137,6 +144,7 @@ class EventController(
             model.addAttribute("club", club)
             model.addAttribute("event", event)
             model.addAttribute("eventForm", eventForm)
+            model.addAttribute("eventTypes", eventService.findAllEventTypes())
             return "events/update"
         }
     }

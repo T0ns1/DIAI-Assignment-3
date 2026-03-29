@@ -28,7 +28,7 @@
             <label class="form-label">Type</label>
             <select class="form-select" th:field="*{type}">
                 <option value="">Select one</option>
-                <option th:each="t : ${T(pt.unl.fct.iadi.novaevents.model.Event.EventType).values()}" th:value="${t}" th:text="${t}"></option>
+                <option th:each="t : ${eventTypes}" th:value="${t.id}" th:text="${t.name}"></option>
             </select>
             <div class="text-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
         </div>
