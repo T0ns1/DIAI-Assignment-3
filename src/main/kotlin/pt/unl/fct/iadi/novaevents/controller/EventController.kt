@@ -74,10 +74,10 @@ class EventController(
                 name = eventForm.name,
                 date = eventForm.date!!,
                 location = eventForm.location,
-                typeId = eventForm.type!!,
+                typeName = eventForm.type,
                 description = eventForm.description
             )
-            return "redirect:/clubs/$clubId/events/${event.id}" // Avoid double post
+            return "redirect:/clubs/$clubId"
         } catch (ex: IllegalArgumentException) {
             bindingResult.rejectValue("name", "duplicate",
                 ex.message ?: "An event with this name already exists")
@@ -99,7 +99,7 @@ class EventController(
             name = event.name,
             date = event.date,
             location = event.location,
-            type = event.type?.id,
+            type = event.type?.name ?: "",
             description = event.description
         )
 
@@ -134,10 +134,10 @@ class EventController(
                 name = eventForm.name,
                 date = eventForm.date!!,
                 location = eventForm.location,
-                typeId = eventForm.type!!,
+                typeName = eventForm.type,
                 description = eventForm.description
             )
-            return "redirect:/clubs/$clubId/events/$eventId" // To avoid duplicate form submission on refresh
+            return "redirect:/clubs/$clubId"
         } catch (ex: IllegalArgumentException) {
             bindingResult.rejectValue("name", "duplicate",
                 ex.message ?: "An event with this name already exists")

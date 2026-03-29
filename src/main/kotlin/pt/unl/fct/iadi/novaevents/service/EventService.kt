@@ -36,13 +36,17 @@ class EventService(
     fun findEventTypeById(typeId: Long): EventType =
         eventTypeRepository.findById(typeId).orElseThrow { NoSuchElementException("Event type with id $typeId not found") }
 
+    fun findEventTypeByName(typeName: String): EventType =
+        eventTypeRepository.findByNameIgnoreCase(typeName.trim())
+            ?: throw NoSuchElementException("Event type with name $typeName not found")
+
     @Transactional
     fun createEvent(
         clubId: Long,
         name: String,
         date: LocalDate,
         location: String?,
-        typeId: Long,
+        typeName: String,
         description: String?
     ): Event {
         val club = clubService.findById(clubId)
@@ -54,7 +58,7 @@ class EventService(
                 name = name.trim(),
                 date = date,
                 location = location?.takeIf { it.isNotBlank() }?.trim(),
-                type = findEventTypeById(typeId),
+                type = findEventTypeByName(typeName),
                 description = description?.takeIf { it.isNotBlank() }?.trim()
             )
         )
@@ -67,7 +71,7 @@ class EventService(
         name: String,
         date: LocalDate,
         location: String?,
-        typeId: Long,
+        typeName: String,
         description: String?
     ): Event {
         val event = findByIdInClub(clubId, eventId)
@@ -76,7 +80,7 @@ class EventService(
         event.name = name.trim()
         event.date = date
         event.location = location?.takeIf { it.isNotBlank() }?.trim()
-        event.type = findEventTypeById(typeId)
+        event.type = findEventTypeByName(typeName)
         event.description = description?.takeIf { it.isNotBlank() }?.trim()
 
         return event

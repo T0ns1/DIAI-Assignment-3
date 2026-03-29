@@ -16,8 +16,8 @@ data class EventFormDto(
 
     var location: String? = null,
 
-    @field:NotNull(message = "Event type is required")
-    var type: Long? = null,
+    @field:NotBlank(message = "Event type is required")
+    var type: String = "",
 
     var description: String? = null
 )

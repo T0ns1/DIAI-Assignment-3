@@ -14,6 +14,7 @@
             <th>Name</th>
             <th>Category</th>
             <th>Description</th>
+            <th>Events</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -21,7 +22,6 @@
         <tr th:each="clubItem : ${clubs}">
             <td>
                 <span th:text="${clubItem.club.name}"></span>
-                <span class="badge text-bg-secondary ms-2" th:text="${clubItem.eventCount + ' events'}"></span>
             </td>
             <td>
                 <span th:class="${'badge rounded-2 ' +
@@ -39,6 +39,7 @@
                     <p class="mt-2" th:text="${clubItem.club.description}"></p>
                 </details>
             </td>
+            <td th:text="${clubItem.eventCount}"></td>
             <td>
                 <a th:href="@{/clubs/{id}(id=${clubItem.club.id})}"
                    class="btn btn-sm btn-outline-primary">View Details</a>
