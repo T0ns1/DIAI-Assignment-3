@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*
 import pt.unl.fct.iadi.novaevents.controller.dto.EventFormDto
 import pt.unl.fct.iadi.novaevents.service.ClubService
 import pt.unl.fct.iadi.novaevents.service.EventService
+import java.security.Principal
+import org.springframework.security.access.prepost.PreAuthorize
 
 @Controller
 class EventController(
@@ -60,7 +62,8 @@ class EventController(
         @PathVariable clubId: Long,
         @Valid @ModelAttribute("eventForm") eventForm: EventFormDto,
         bindingResult: BindingResult,
-        model: Model
+        model: Model,
+        principal: Principal
     ): String {
         val club = clubService.findById(clubId)
         if (bindingResult.hasErrors()) {
@@ -75,7 +78,8 @@ class EventController(
                 date = eventForm.date!!,
                 location = eventForm.location,
                 typeName = eventForm.type,
-                description = eventForm.description
+                description = eventForm.description,
+                ownerUsername = principal.name
             )
             return "redirect:/clubs/$clubId/events/${event.id}" // Avoid double post
         } catch (ex: IllegalArgumentException) {
@@ -88,6 +92,7 @@ class EventController(
     }
 
     @GetMapping("/clubs/{clubId}/events/{eventId}/edit")
+    @PreAuthorize("@eventAuthorization.canEdit(#eventId, authentication.name)")
     fun editForm(
         @PathVariable clubId: Long,
         @PathVariable eventId: Long,
@@ -111,6 +116,7 @@ class EventController(
     }
 
     @PostMapping("/clubs/{clubId}/events/{eventId}", params = ["_method=PUT"])
+    @PreAuthorize("@eventAuthorization.canEdit(#eventId, authentication.name)")
     fun updateEvent(
         @PathVariable clubId: Long,
         @PathVariable eventId: Long,
@@ -150,6 +156,7 @@ class EventController(
     }
 
     @GetMapping("/clubs/{clubId}/events/{eventId}/delete")
+    @PreAuthorize("@eventAuthorization.canDelete(#eventId, authentication)")
     fun deleteConfirmation(
         @PathVariable clubId: Long,
         @PathVariable eventId: Long,
@@ -161,6 +168,7 @@ class EventController(
     }
 
     @PostMapping("/clubs/{clubId}/events/{eventId}", params = ["_method=DELETE"])
+    @PreAuthorize("@eventAuthorization.canDelete(#eventId, authentication)")
     fun deleteEvent(
         @PathVariable clubId: Long,
         @PathVariable eventId: Long
@@ -170,11 +178,13 @@ class EventController(
     }
 
     @DeleteMapping("/clubs/{clubId}/events/{eventId}")
+    @PreAuthorize("@eventAuthorization.canDelete(#eventId, authentication)")
     fun deleteEventDelete(@PathVariable clubId: Long, @PathVariable eventId: Long): String {
         return deleteEvent(clubId, eventId)
     }
 
     @PutMapping("/clubs/{clubId}/events/{eventId}")
+    @PreAuthorize("@eventAuthorization.canEdit(#eventId, authentication.name)")
     fun updateEventPut(@PathVariable clubId: Long, @PathVariable eventId: Long,
                        @Valid @ModelAttribute("eventForm") eventForm: EventFormDto, bindingResult: BindingResult, model: Model): String {
         return updateEvent(clubId, eventId, eventForm, bindingResult, model)

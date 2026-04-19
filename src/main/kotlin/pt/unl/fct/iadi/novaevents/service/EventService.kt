@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.data.domain.Sort
 import pt.unl.fct.iadi.novaevents.model.Event
 import pt.unl.fct.iadi.novaevents.model.EventType
+import pt.unl.fct.iadi.novaevents.repository.AppUserRepository
 import pt.unl.fct.iadi.novaevents.repository.EventRepository
 import pt.unl.fct.iadi.novaevents.repository.EventTypeRepository
 import java.time.LocalDate
@@ -15,7 +16,8 @@ import java.util.NoSuchElementException
 class EventService(
     private val clubService: ClubService,
     private val eventRepository: EventRepository,
-    private val eventTypeRepository: EventTypeRepository
+    private val eventTypeRepository: EventTypeRepository,
+    private val appUserRepository: AppUserRepository
 ) {
     fun getAllEvents(type: String?, clubId: Long?): List<Event> =
         eventRepository.findAllByFilters(clubId, type?.takeIf { it.isNotBlank() })
@@ -47,9 +49,12 @@ class EventService(
         date: LocalDate,
         location: String?,
         typeName: String,
-        description: String?
+        description: String?,
+        ownerUsername: String
     ): Event {
         val club = clubService.findById(clubId)
+        val owner = appUserRepository.findByUsername(ownerUsername)
+            ?: throw NoSuchElementException("User with username $ownerUsername not found")
         validateDuplicateName(name, null)
 
         return eventRepository.save(
@@ -59,6 +64,7 @@ class EventService(
                 date = date,
                 location = location?.takeIf { it.isNotBlank() }?.trim(),
                 type = findEventTypeByName(typeName),
+                owner = owner,
                 description = description?.takeIf { it.isNotBlank() }?.trim()
             )
         )

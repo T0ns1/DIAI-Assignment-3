@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Nova Events Sign In')}"></head>
+<body class="bg-light">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <h1 class="fw-bold">Nova Events Sign In</h1>
+
+    <div class="alert alert-danger mt-3" th:if="${param.error}">
+        Invalid username or password.
+    </div>
+    <div class="alert alert-success mt-3" th:if="${param.logout}">
+        You have been signed out.
+    </div>
+
+    <form th:action="@{/login}" method="post" class="mt-4">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input id="username" name="username" type="text" class="form-control" autocomplete="username" autofocus>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input id="password" name="password" type="password" class="form-control" autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Sign In</button>
+    </form>
+</div>
+</body>
+</html>
