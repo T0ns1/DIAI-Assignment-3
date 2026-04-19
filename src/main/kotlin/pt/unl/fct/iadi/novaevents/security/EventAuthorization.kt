@@ -17,12 +17,7 @@ class EventAuthorization(
 
     @Transactional(readOnly = true)
     fun canDelete(eventId: Long, authentication: Authentication): Boolean {
-        val isAdmin = authentication.authorities.any { it.authority == "ROLE_ADMIN" }
-        if (isAdmin) {
-            return true
-        }
-
-        val event = eventRepository.findById(eventId).orElse(null) ?: return false
-        return event.owner?.username == authentication.name
+        eventRepository.findById(eventId).orElse(null) ?: return false
+        return authentication.authorities.any { it.authority == "ROLE_ADMIN" }
     }
 }

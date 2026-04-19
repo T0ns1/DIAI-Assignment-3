@@ -29,6 +29,7 @@ class DataInitializer(
 
     override fun run(args: ApplicationArguments) {
         seedUsers()
+        backfillMissingEventOwners()
 
         if (eventTypeRepository.count() > 0 || clubRepository.count() > 0 || eventRepository.count() > 0) {
             return
@@ -96,6 +97,15 @@ class DataInitializer(
                     )
                 )
             }
+        }
+    }
+
+    private fun backfillMissingEventOwners() {
+        val alice = appUserRepository.findByUsername("alice") ?: return
+        val eventsWithoutOwner = eventRepository.findByOwnerIsNull()
+        if (eventsWithoutOwner.isNotEmpty()) {
+            eventsWithoutOwner.forEach { it.owner = alice }
+            eventRepository.saveAll(eventsWithoutOwner)
         }
     }
 }

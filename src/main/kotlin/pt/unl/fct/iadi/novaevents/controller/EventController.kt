@@ -68,11 +68,12 @@ class EventController(
         val club = clubService.findById(clubId)
         if (bindingResult.hasErrors()) {
             model.addAttribute("club", club)
+            model.addAttribute("eventTypes", eventService.findAllEventTypes())
             return "events/form"
         }
 
         try {
-            val event = eventService.createEvent(
+            eventService.createEvent(
                 clubId = clubId,
                 name = eventForm.name,
                 date = eventForm.date!!,
@@ -81,7 +82,7 @@ class EventController(
                 description = eventForm.description,
                 ownerUsername = principal.name
             )
-            return "redirect:/clubs/$clubId/events/${event.id}" // Avoid double post
+            return "redirect:/clubs/$clubId"
         } catch (ex: IllegalArgumentException) {
             bindingResult.rejectValue("name", "duplicate",
                 ex.message ?: "An event with this name already exists")
@@ -143,7 +144,7 @@ class EventController(
                 typeName = eventForm.type,
                 description = eventForm.description
             )
-            return "redirect:/clubs/$clubId/events/$eventId" // To avoid duplicate form submission on refresh
+            return "redirect:/clubs/$clubId"
         } catch (ex: IllegalArgumentException) {
             bindingResult.rejectValue("name", "duplicate",
                 ex.message ?: "An event with this name already exists")

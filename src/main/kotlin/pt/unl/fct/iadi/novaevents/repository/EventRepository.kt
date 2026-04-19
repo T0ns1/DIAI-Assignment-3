@@ -13,6 +13,8 @@ interface EventRepository : JpaRepository<Event, Long> {
 
     fun findByClub_IdAndId(clubId: Long, id: Long): Event?
 
+    fun findByOwnerIsNull(): List<Event>
+
     @Query(
         """
         select e from Event e

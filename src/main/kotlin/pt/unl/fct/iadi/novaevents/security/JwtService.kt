@@ -10,8 +10,8 @@ import javax.crypto.SecretKey
 
 @Service
 class JwtService(
-    @Value("\${jwt.secret}") secret: String,
-    @Value("\${jwt.expiration-ms}") private val expirationMs: Long
+    @Value("\${jwt.secret:novaevents-jwt-secret-key-for-hs256-signing-minimum-32-bytes}") secret: String,
+    @Value("\${jwt.expiration-ms:3600000}") private val expirationMs: Long
 ) {
     private val key: SecretKey = Keys.hmacShaKeyFor(secret.toByteArray())
 

@@ -53,11 +53,11 @@ class SecurityConfig(
                     .requestMatchers(RegexRequestMatcher("^/clubs/\\d+/events/\\d+$", "GET")).permitAll()
                     .requestMatchers(RegexRequestMatcher("^/clubs/\\d+/events/new$", "GET")).hasAnyRole("EDITOR", "ADMIN")
                     .requestMatchers(RegexRequestMatcher("^/clubs/\\d+/events/\\d+/edit$", "GET")).hasAnyRole("EDITOR", "ADMIN")
-                    .requestMatchers(RegexRequestMatcher("^/clubs/\\d+/events/\\d+/delete$", "GET")).hasAnyRole("EDITOR", "ADMIN")
+                    .requestMatchers(RegexRequestMatcher("^/clubs/\\d+/events/\\d+/delete$", "GET")).hasRole("ADMIN")
                     .requestMatchers(RegexRequestMatcher("^/clubs/\\d+/events$", "POST")).hasAnyRole("EDITOR", "ADMIN")
                     .requestMatchers(RegexRequestMatcher("^/clubs/\\d+/events/\\d+$", "POST")).hasAnyRole("EDITOR", "ADMIN")
                     .requestMatchers(RegexRequestMatcher("^/clubs/\\d+/events/\\d+$", "PUT")).hasAnyRole("EDITOR", "ADMIN")
-                    .requestMatchers(RegexRequestMatcher("^/clubs/\\d+/events/\\d+$", "DELETE")).hasAnyRole("EDITOR", "ADMIN")
+                    .requestMatchers(RegexRequestMatcher("^/clubs/\\d+/events/\\d+$", "DELETE")).hasRole("ADMIN")
                     .anyRequest().authenticated()
             }
             .formLogin { form ->
