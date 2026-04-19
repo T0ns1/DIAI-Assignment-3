@@ -23,16 +23,15 @@ class EventController(
         @RequestParam(required = false) clubId: Long?,
         model: Model
     ): String {
-        val clubs = clubService.findAll()
-        val eventTypes = eventService.findAllEventTypes()
+        val events = eventService.getAllEvents(type, clubId)
+        val clubs = events.mapNotNull { it.club }.distinctBy { it.id }.sortedBy { it.id }
+        val eventTypes = events.mapNotNull { it.type }.distinctBy { it.id }.sortedBy { it.id }
+
         model.addAttribute("clubs", clubs)
         model.addAttribute("eventTypes", eventTypes)
-        model.addAttribute("clubMap", clubs.associateBy { it.id })
         model.addAttribute("selectedType", type)
         model.addAttribute("selectedClubId", clubId)
-
-        model.addAttribute("events",
-            eventService.getAllEvents(type, clubId))
+        model.addAttribute("events", events)
 
         return "events/list"
     }
