@@ -1,7 +1,10 @@
 package pt.unl.fct.iadi.novaevents.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import org.springframework.transaction.annotation.Transactional
+import pt.unl.fct.iadi.novaevents.model.AppUser
 import pt.unl.fct.iadi.novaevents.model.Event
 
 interface EventRepository : JpaRepository<Event, Long> {
@@ -9,11 +12,31 @@ interface EventRepository : JpaRepository<Event, Long> {
 
     fun existsByNameIgnoreCaseAndIdNot(name: String, id: Long): Boolean
 
-    fun findByClub_IdOrderByDateAscIdAsc(clubId: Long): List<Event>
+    @Query(
+        """
+        select e from Event e
+        join fetch e.club c
+        join fetch e.type t
+        where c.id = :clubId
+        order by e.date asc, e.id asc
+        """
+    )
+    fun findByClubIdWithDetails(clubId: Long): List<Event>
 
-    fun findByClub_IdAndId(clubId: Long, id: Long): Event?
+    @Query(
+        """
+        select e from Event e
+        join fetch e.club c
+        join fetch e.type t
+        where c.id = :clubId and e.id = :id
+        """
+    )
+    fun findByClubIdAndIdWithDetails(clubId: Long, id: Long): Event?
 
-    fun findByOwnerIsNull(): List<Event>
+    @Modifying
+    @Transactional
+    @Query("update Event e set e.owner = :owner where e.owner is null")
+    fun assignMissingOwner(owner: AppUser): Int
 
     @Query(
         """

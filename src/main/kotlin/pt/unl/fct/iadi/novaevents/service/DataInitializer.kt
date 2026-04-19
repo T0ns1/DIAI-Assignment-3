@@ -102,10 +102,6 @@ class DataInitializer(
 
     private fun backfillMissingEventOwners() {
         val alice = appUserRepository.findByUsername("alice") ?: return
-        val eventsWithoutOwner = eventRepository.findByOwnerIsNull()
-        if (eventsWithoutOwner.isNotEmpty()) {
-            eventsWithoutOwner.forEach { it.owner = alice }
-            eventRepository.saveAll(eventsWithoutOwner)
-        }
+        eventRepository.assignMissingOwner(alice)
     }
 }

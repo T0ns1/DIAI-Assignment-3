@@ -24,12 +24,12 @@ class EventService(
 
     fun findByClubId(clubId: Long): List<Event> {
         clubService.findById(clubId)
-        return eventRepository.findByClub_IdOrderByDateAscIdAsc(clubId)
+        return eventRepository.findByClubIdWithDetails(clubId)
     }
 
     fun findByIdInClub(clubId: Long, eventId: Long): Event {
         clubService.findById(clubId)
-        return eventRepository.findByClub_IdAndId(clubId, eventId)
+        return eventRepository.findByClubIdAndIdWithDetails(clubId, eventId)
             ?: throw NoSuchElementException("Event with id $eventId not found in club with id $clubId")
     }
 

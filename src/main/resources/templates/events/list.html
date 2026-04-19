@@ -59,7 +59,7 @@
                    th:text="${event.name}">Event</a>
             </td>
             <td>
-                <a th:href="@{/clubs/{id}(id=${event.club.id})}" th:text="${clubMap[event.club.id].name}">Club</a>
+                <a th:href="@{/clubs/{id}(id=${event.club.id})}" th:text="${event.club.name}">Club</a>
             </td>
             <td th:text="${#temporals.format(event.date, 'dd MMM yyyy')}"></td>
             <td><span class="badge bg-secondary" th:text="${event.type.name}"></span></td>
