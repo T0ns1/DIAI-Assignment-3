@@ -10,6 +10,7 @@ import pt.unl.fct.iadi.novaevents.service.ClubService
 import pt.unl.fct.iadi.novaevents.service.EventService
 import java.security.Principal
 import org.springframework.security.access.prepost.PreAuthorize
+import pt.unl.fct.iadi.novaevents.service.EventCreationValidationException
 
 @Controller
 class EventController(
@@ -82,6 +83,15 @@ class EventController(
                 ownerUsername = principal.name
             )
             return "redirect:/clubs/$clubId/events/${event.id}"
+        } catch (ex: EventCreationValidationException) {
+            if (ex.field != null) {
+                bindingResult.rejectValue(ex.field, "invalid", ex.message)
+            } else {
+                bindingResult.reject("invalid", ex.message)
+            }
+            model.addAttribute("club", club)
+            model.addAttribute("eventTypes", eventService.findAllEventTypes())
+            return "events/form"
         } catch (ex: IllegalArgumentException) {
             bindingResult.rejectValue("name", "duplicate",
                 ex.message ?: "An event with this name already exists")

@@ -32,7 +32,21 @@
 
         <div class="mb-3">
             <label class="form-label">Location</label>
-            <input class="form-control" type="text" th:field="*{location}">
+            <div class="input-group">
+                <input class="form-control" type="text" th:field="*{location}">
+                <button class="btn btn-outline-primary" type="button" id="check-weather-js">Check Weather JS</button>
+                <button class="btn btn-outline-secondary"
+                        type="button"
+                        hx-get="/api/weather"
+                        hx-include="#location"
+                        hx-headers='{"Accept":"text/html"}'
+                        hx-target="#weather-result"
+                        hx-swap="innerHTML">
+                    Check Weather HTMX
+                </button>
+            </div>
+            <div class="text-danger" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
+            <div id="weather-result" class="mt-2"></div>
         </div>
 
         <div class="mb-3">
@@ -43,5 +57,40 @@
         <button class="btn btn-primary" type="submit">Save</button>
     </form>
 </div>
+<script th:inline="javascript">
+    const locationInput = document.getElementById('location');
+    const weatherResult = document.getElementById('weather-result');
+    const weatherButton = document.getElementById('check-weather-js');
+
+    weatherButton?.addEventListener('click', async () => {
+        const location = locationInput?.value?.trim();
+        if (!location) {
+            weatherResult.innerHTML = '<span class="text-secondary">Weather data unavailable.</span>';
+            return;
+        }
+
+        const response = await fetch(`/api/weather?location=${encodeURIComponent(location)}`, {
+            headers: { Accept: 'application/json' }
+        });
+
+        if (!response.ok) {
+            weatherResult.innerHTML = '<span class="text-secondary">Weather data unavailable.</span>';
+            return;
+        }
+
+        const body = await response.json();
+        if (body.raining === true) {
+            weatherResult.innerHTML = '<span class="badge bg-warning text-dark">Raining</span>';
+            return;
+        }
+
+        if (body.raining === false) {
+            weatherResult.innerHTML = '<span class="badge bg-success">Clear</span>';
+            return;
+        }
+
+        weatherResult.innerHTML = '<span class="text-secondary">Weather data unavailable.</span>';
+    });
+</script>
 </body>
 </html>

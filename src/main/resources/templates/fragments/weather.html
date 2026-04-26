@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="status">
+    <span th:if="${raining == true}" class="badge bg-warning text-dark">Raining</span>
+    <span th:if="${raining == false}" class="badge bg-success">Clear</span>
+    <span th:if="${raining == null}" class="text-secondary">Weather data unavailable.</span>
+</th:block>
+</body>
+</html>

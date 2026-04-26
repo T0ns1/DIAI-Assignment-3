@@ -17,8 +17,13 @@ class EventService(
     private val clubService: ClubService,
     private val eventRepository: EventRepository,
     private val eventTypeRepository: EventTypeRepository,
-    private val appUserRepository: AppUserRepository
+    private val appUserRepository: AppUserRepository,
+    private val weatherService: WeatherService
 ) {
+    companion object {
+        const val HIKING_AND_OUTDOORS_CLUB = "Hiking & Outdoors Club"
+    }
+
     fun getAllEvents(type: String?, clubId: Long?): List<Event> =
         eventRepository.findAllByFilters(clubId, type?.takeIf { it.isNotBlank() })
 
@@ -55,6 +60,7 @@ class EventService(
         val club = clubService.findById(clubId)
         val owner = appUserRepository.findByUsername(ownerUsername)
             ?: throw NoSuchElementException("User with username $ownerUsername not found")
+        validateOutdoorEvent(club.name, location)
         validateDuplicateName(name, null)
 
         return eventRepository.save(
@@ -107,6 +113,27 @@ class EventService(
 
         if (duplicate) {
             throw IllegalArgumentException("An event with this name already exists.")
+        }
+    }
+
+    private fun validateOutdoorEvent(clubName: String, location: String?) {
+        if (clubName != HIKING_AND_OUTDOORS_CLUB) {
+            return
+        }
+
+        val normalizedLocation = location?.trim().orEmpty()
+        if (normalizedLocation.isBlank()) {
+            throw EventCreationValidationException(
+                field = "location",
+                message = "Location is required for outdoor events"
+            )
+        }
+
+        if (weatherService.isRaining(normalizedLocation) == true) {
+            throw EventCreationValidationException(
+                field = "location",
+                message = "It is currently raining at \"$normalizedLocation\" — outdoor events cannot be created in bad weather"
+            )
         }
     }
 }
