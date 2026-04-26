@@ -20,7 +20,7 @@
                 <a class="nav-link" th:href="@{/events}">Events</a>
             </div>
             <div class="navbar-nav ms-auto align-items-lg-center" sec:authorize="isAuthenticated()">
-                <span id="navbar-username" class="navbar-text me-lg-3" sec:authentication="name">username</span>
+                <span class="navbar-username navbar-text me-lg-3" sec:authentication="name">username</span>
                 <form th:action="@{/logout}" method="post" class="m-0">
                     <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
                 </form>

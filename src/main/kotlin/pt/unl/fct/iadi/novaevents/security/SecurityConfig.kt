@@ -12,13 +12,13 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.savedrequest.CookieRequestCache
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RegexRequestMatcher
 
 @Configuration
@@ -99,10 +99,7 @@ class SecurityConfig(
                 logout.logoutSuccessUrl("/clubs")
             }
             .exceptionHandling {
-                it.defaultAuthenticationEntryPointFor(
-                    HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
-                    AntPathRequestMatcher("/api/**")
-                )
+                it.authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
             }
 
         return http.build()

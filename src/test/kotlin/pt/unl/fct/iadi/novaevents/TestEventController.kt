@@ -37,7 +37,8 @@ class TestEventController {
     @Test
     fun `new event form requires authentication`() {
         mockMvc.perform(get("/clubs/1/events/new"))
-            .andExpect(status().isUnauthorized)
+            .andExpect(status().is3xxRedirection)
+            .andExpect(redirectedUrl("http://localhost/login"))
     }
 
     @Test
